@@ -1,5 +1,4 @@
 project "SeePP"
-    location "seepp"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++20"

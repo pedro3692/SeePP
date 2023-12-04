@@ -19,6 +19,7 @@ endif
 # #############################################
 
 RESCOMP = windres
+INCLUDES += -I../glad/include
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -35,11 +36,10 @@ TARGETDIR = ../bin/Debug
 TARGET = $(TARGETDIR)/SeePP
 OBJDIR = obj/Debug
 DEFINES += -DDEBUG
-INCLUDES +=
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -std=c++20
-LIBS +=
-LDDEPS +=
+LIBS += ../lib/Debug/libGlad.a -lglfw -ldl
+LDDEPS += ../lib/Debug/libGlad.a
 ALL_LDFLAGS += $(LDFLAGS)
 
 else ifeq ($(config),release)
@@ -47,7 +47,6 @@ TARGETDIR = ../bin/Release
 TARGET = $(TARGETDIR)/SeePP
 OBJDIR = obj/Release
 DEFINES += -DRELEASE
-INCLUDES += -I../glad/include
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++20
 LIBS += ../lib/Release/libGlad.a -lglfw -ldl
@@ -63,6 +62,11 @@ endif
 # File sets
 # #############################################
 
+GENERATED :=
+OBJECTS :=
+
+GENERATED += $(OBJDIR)/main.o
+OBJECTS += $(OBJDIR)/main.o
 
 # Rules
 # #############################################
@@ -70,7 +74,7 @@ endif
 all: $(TARGET)
 	@:
 
-$(TARGET): $(OBJECTS) $(LDDEPS) | $(TARGETDIR)
+$(TARGET): $(GENERATED) $(OBJECTS) $(LDDEPS) | $(TARGETDIR)
 	$(PRELINKCMDS)
 	@echo Linking SeePP
 	$(SILENT) $(LINKCMD)
@@ -125,6 +129,10 @@ endif
 
 # File Rules
 # #############################################
+
+$(OBJDIR)/main.o: src/main.cpp
+	@echo "$(notdir $<)"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
 -include $(OBJECTS:%.o=%.d)
 ifneq (,$(PCH))

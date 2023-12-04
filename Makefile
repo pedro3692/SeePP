@@ -35,12 +35,12 @@ endif
 SeePP: Glad
 ifneq (,$(SeePP_config))
 	@echo "==== Building SeePP ($(SeePP_config)) ===="
-	@${MAKE} --no-print-directory -C seepp/seepp -f Makefile config=$(SeePP_config)
+	@${MAKE} --no-print-directory -C seepp -f Makefile config=$(SeePP_config)
 endif
 
 clean:
 	@${MAKE} --no-print-directory -C glad -f Makefile clean
-	@${MAKE} --no-print-directory -C seepp/seepp -f Makefile clean
+	@${MAKE} --no-print-directory -C seepp -f Makefile clean
 
 help:
 	@echo "Usage: make [config=name] [target]"
