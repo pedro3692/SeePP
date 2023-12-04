@@ -1,6 +1,8 @@
+#include <cstdio>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <format>
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -26,9 +28,7 @@ int main(int argc, char *argv[]) {
         std::cout << "could not init Glad" << std::endl;
         return -1;
     }
-    std::cout << "GL v" << GLAD_VERSION_MAJOR(version)
-              << "." << GLAD_VERSION_MINOR(version) << std::endl;
-
+    std::cout << std::format("GL v{}.{}\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
     glViewport(0, 0, WIDTH, HEIGHT);
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
