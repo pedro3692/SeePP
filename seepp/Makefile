@@ -18,11 +18,20 @@ endif
 # Configurations
 # #############################################
 
-RESCOMP = windres
+ifeq ($(origin CC), default)
+  CC = clang
+endif
+ifeq ($(origin CXX), default)
+  CXX = clang++
+endif
+ifeq ($(origin AR), default)
+  AR = ar
+endif
 INCLUDES += -I../glad/include
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+ALL_LDFLAGS += $(LDFLAGS)
 LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
 endef
@@ -40,7 +49,6 @@ ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -std=c++20
 LIBS += ../lib/Debug/libGlad.a -lglfw -ldl
 LDDEPS += ../lib/Debug/libGlad.a
-ALL_LDFLAGS += $(LDFLAGS)
 
 else ifeq ($(config),release)
 TARGETDIR = ../bin/Release
@@ -51,7 +59,6 @@ ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++20
 LIBS += ../lib/Release/libGlad.a -lglfw -ldl
 LDDEPS += ../lib/Release/libGlad.a
-ALL_LDFLAGS += $(LDFLAGS) -s
 
 endif
 

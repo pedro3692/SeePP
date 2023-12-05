@@ -2,6 +2,7 @@ project "SeePP"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++20"
+    toolset("clang")
     targetdir "../bin/%{cfg.buildcfg}"
 
     includedirs {
