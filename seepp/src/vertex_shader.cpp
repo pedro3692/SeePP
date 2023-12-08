@@ -1,13 +1,14 @@
-#include "vertex_shader.h"
 #include <glad/gl.h>
 #include <iostream>
 #include <format>
+
+#include "vertex_shader.h"
 
 VertexShader::VertexShader(const char* code)
 {
     m_id = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(m_id, 1, &code, nullptr);
-
+    glCompileShader(m_id);
 
     int success;
     char infoLog[512];

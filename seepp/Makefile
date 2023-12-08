@@ -27,7 +27,7 @@ endif
 ifeq ($(origin AR), default)
   AR = ar
 endif
-INCLUDES += -I../glad/include
+INCLUDES += -I../glad/include -Isrc
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -73,7 +73,9 @@ GENERATED :=
 OBJECTS :=
 
 GENERATED += $(OBJDIR)/main.o
+GENERATED += $(OBJDIR)/vertex_shader.o
 OBJECTS += $(OBJDIR)/main.o
+OBJECTS += $(OBJDIR)/vertex_shader.o
 
 # Rules
 # #############################################
@@ -138,6 +140,9 @@ endif
 # #############################################
 
 $(OBJDIR)/main.o: src/main.cpp
+	@echo "$(notdir $<)"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/vertex_shader.o: src/vertex_shader.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

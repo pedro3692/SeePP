@@ -4,6 +4,8 @@
 #include <iostream>
 #include <format>
 
+#include "vertex_shader.h"
+
 #define WIDTH 800
 #define HEIGHT 600
 
@@ -47,24 +49,13 @@ int main(int argc, char *argv[])
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // vertex shader
-    uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);
     const char* vertexShaderSource = "#version 330 core\n"
         "layout (location = 0) in vec3 aPos;\n"
         "void main()\n"
         "{\n"
         "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
         "}\0";
-    glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-    glCompileShader(vertexShader);
-
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
-        std::cout << std::format("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n{}\n", infoLog);
-    }
+    VertexShader vertex_shader(vertexShaderSource);
 
     const char* fragmentShaderSource = "#version 330 core\n"
         "out vec4 FragColor;\n"
@@ -73,6 +64,8 @@ int main(int argc, char *argv[])
         "   FragColor = vec4(1.0f, 0.0f, 0.0f, 0.1f);\n"
         "}\0";
 
+    int success;
+    char infoLog[512];
     // fragment shader
     uint32_t fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
@@ -85,10 +78,9 @@ int main(int argc, char *argv[])
     }
 
     uint32_t shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, vertex_shader.id());
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
-    glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);

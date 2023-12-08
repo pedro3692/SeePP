@@ -6,7 +6,8 @@ project "SeePP"
     targetdir "../bin/%{cfg.buildcfg}"
 
     includedirs {
-        "../glad/include"
+        "../glad/include",
+        "src"
     }
 
     files { "src/*.h", "src/*.cpp" }
