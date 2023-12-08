@@ -1,5 +1,5 @@
-#ifndef SHADER_H_
-#define SHADER_H_
+#ifndef VERTEX_SHADER_H_
+#define VERTEX_SHADER_H_
 #include <cstdint>
 
 class VertexShader {
@@ -12,4 +12,4 @@ public:
 private:
   uint32_t m_id = 0;
 };
-#endif // SHADER_H_
+#endif // VERTEX_SHADER_H_

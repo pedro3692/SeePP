@@ -4,6 +4,7 @@
 #include <iostream>
 #include <format>
 
+#include "fragment_shader.h"
 #include "vertex_shader.h"
 
 #define WIDTH 800
@@ -63,26 +64,15 @@ int main(int argc, char *argv[])
         "{\n"
         "   FragColor = vec4(1.0f, 0.0f, 0.0f, 0.1f);\n"
         "}\0";
-
-    int success;
-    char infoLog[512];
-    // fragment shader
-    uint32_t fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
-    glCompileShader(fragmentShader);
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
-        std::cout << std::format("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n{}\n", infoLog);
-    }
+    FragmentShader fragment_shader(fragmentShaderSource);
 
     uint32_t shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertex_shader.id());
-    glAttachShader(shaderProgram, fragmentShader);
+    glAttachShader(shaderProgram, fragment_shader.id());
     glLinkProgram(shaderProgram);
-    glDeleteShader(fragmentShader);
 
+    int success;
+    char infoLog[512];
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
     if(!success)
     {
