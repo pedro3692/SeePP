@@ -1,6 +1,6 @@
-#include <cstdio>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
+#include <cstdint>
 #include <iostream>
 #include <format>
 
@@ -10,13 +10,15 @@
 void handleInput(GLFWwindow* window);
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "[glad] GL with GLFW", NULL, NULL);
-    if (window == nullptr) {
+    if (window == nullptr)
+    {
         std::cout << "coul not create window" << std::endl;
         return -1;
     }
@@ -24,7 +26,8 @@ int main(int argc, char *argv[]) {
     glfwMakeContextCurrent(window);
 
     int version = gladLoadGL(glfwGetProcAddress);
-    if (!version) {
+    if (!version)
+    {
         std::cout << "could not init Glad" << std::endl;
         return -1;
     }
@@ -57,7 +60,8 @@ int main(int argc, char *argv[]) {
     int success;
     char infoLog[512];
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
+    if (!success)
+    {
         glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
         std::cout << std::format("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n{}\n", infoLog);
     }
@@ -74,7 +78,8 @@ int main(int argc, char *argv[]) {
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
     glCompileShader(fragmentShader);
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
+    if (!success)
+    {
         glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
         std::cout << std::format("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n{}\n", infoLog);
     }
@@ -87,13 +92,13 @@ int main(int argc, char *argv[]) {
     glDeleteShader(fragmentShader);
 
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if(!success) {
+    if(!success)
+    {
         glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
         std::cout << std::format("ERROR::SHADER::PROGRAM::LINK_FAILED\n{}\n", infoLog);
     }
 
     glUseProgram(shaderProgram);
-
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
@@ -106,7 +111,8 @@ int main(int argc, char *argv[]) {
     glEnableVertexAttribArray(0);
 
     // main loop11
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(window))
+    {
         handleInput(window);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -125,12 +131,15 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-void handleInput(GLFWwindow* window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+void handleInput(GLFWwindow* window)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
         glfwSetWindowShouldClose(window, true);
     }
 }
 
-void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
+void framebufferSizeCallback(GLFWwindow* window, int width, int height)
+{
     glViewport(0, 0, width, height);
 }
