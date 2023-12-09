@@ -72,12 +72,10 @@ endif
 GENERATED :=
 OBJECTS :=
 
-GENERATED += $(OBJDIR)/fragment_shader.o
 GENERATED += $(OBJDIR)/main.o
-GENERATED += $(OBJDIR)/vertex_shader.o
-OBJECTS += $(OBJDIR)/fragment_shader.o
+GENERATED += $(OBJDIR)/shader.o
 OBJECTS += $(OBJDIR)/main.o
-OBJECTS += $(OBJDIR)/vertex_shader.o
+OBJECTS += $(OBJDIR)/shader.o
 
 # Rules
 # #############################################
@@ -141,13 +139,10 @@ endif
 # File Rules
 # #############################################
 
-$(OBJDIR)/fragment_shader.o: src/fragment_shader.cpp
-	@echo "$(notdir $<)"
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/main.o: src/main.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/vertex_shader.o: src/vertex_shader.cpp
+$(OBJDIR)/shader.o: src/shader.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

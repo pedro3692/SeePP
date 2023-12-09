@@ -4,8 +4,7 @@
 #include <iostream>
 #include <format>
 
-#include "fragment_shader.h"
-#include "vertex_shader.h"
+#include "shader.h"
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -49,35 +48,39 @@ int main(int argc, char *argv[])
     };
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    // vertex shader
-    const char* vertexShaderSource = "#version 330 core\n"
-        "layout (location = 0) in vec3 aPos;\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-        "}\0";
-    VertexShader vertex_shader(vertexShaderSource);
-
-    const char* fragmentShaderSource = "#version 330 core\n"
-        "out vec4 FragColor;\n"
-        "void main()\n"
-        "{\n"
-        "   FragColor = vec4(1.0f, 0.0f, 0.0f, 0.1f);\n"
-        "}\0";
-    FragmentShader fragment_shader(fragmentShaderSource);
-
     uint32_t shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertex_shader.id());
-    glAttachShader(shaderProgram, fragment_shader.id());
-    glLinkProgram(shaderProgram);
-
-    int success;
-    char infoLog[512];
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if(!success)
     {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << std::format("ERROR::SHADER::PROGRAM::LINK_FAILED\n{}\n", infoLog);
+        // TODO: load shaders source from file
+        const char* vertexShaderSource = "#version 330 core\n"
+            "layout (location = 0) in vec3 aPos;\n"
+            "void main()\n"
+            "{\n"
+            "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+            "}\0";
+        Shader vertex_shader(ShaderType::Vertex, vertexShaderSource);
+
+        const char* fragmentShaderSource = "#version 330 core\n"
+            "out vec4 FragColor;\n"
+            "void main()\n"
+            "{\n"
+            "   FragColor = vec4(1.0f, 0.0f, 0.0f, 0.1f);\n"
+            "}\0";
+        Shader fragment_shader(ShaderType::Fragment, fragmentShaderSource);
+
+
+        // shader program stuff here
+        glAttachShader(shaderProgram, vertex_shader.id());
+        glAttachShader(shaderProgram, fragment_shader.id());
+        glLinkProgram(shaderProgram);
+
+        int success;
+        char infoLog[512];
+        glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+        if(!success)
+        {
+            glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+            std::cout << std::format("ERROR::SHADER::PROGRAM::LINK_FAILED\n{}\n", infoLog);
+        }
     }
 
     glUseProgram(shaderProgram);

@@ -1,13 +1,15 @@
 
+#include <cstdint>
 #include <glad/gl.h>
 #include <iostream>
 #include <format>
 
-#include "fragment_shader.h"
+#include "shader.h"
 
-FragmentShader::FragmentShader(const char* code)
+Shader::Shader(ShaderType type, const char* code)
+    : m_type(type)
 {
-    m_id = glCreateShader(GL_FRAGMENT_SHADER);
+    m_id = glCreateShader((uint32_t)m_type);
     glShaderSource(m_id, 1, &code, nullptr);
     glCompileShader(m_id);
 
@@ -17,17 +19,17 @@ FragmentShader::FragmentShader(const char* code)
     if (!success)
     {
         glGetShaderInfoLog(m_id, 512, nullptr, infoLog);
-        std::cout << std::format("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n{}\n", infoLog);
+        std::cout << std::format("ERROR::SHADER::{1}::COMPILATION_FAILED\n{0}\n", infoLog, ShaderTypeToString(m_type));
     }
 }
 
-FragmentShader::~FragmentShader()
+Shader::~Shader()
 {
     if (m_id)
         glDeleteShader(m_id);
 }
 
-uint32_t FragmentShader::id() const
+uint32_t Shader::id() const
 {
     return m_id;
 }
