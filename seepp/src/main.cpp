@@ -5,6 +5,7 @@
 #include <format>
 
 #include "shader.h"
+#include "vertex_buffer.h"
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -36,17 +37,6 @@ int main(int argc, char *argv[])
     std::cout << std::format("GL v{}.{}\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
     glViewport(0, 0, WIDTH, HEIGHT);
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-
-    // vertex buffer object
-    uint32_t vbo;
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        -0.0f, 0.5f, 0.0f,
-    };
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     uint32_t shaderProgram = glCreateProgram();
     {
@@ -81,19 +71,29 @@ int main(int argc, char *argv[])
             glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
             std::cout << std::format("ERROR::SHADER::PROGRAM::LINK_FAILED\n{}\n", infoLog);
         }
-    }
+     }
 
-    glUseProgram(shaderProgram);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    float vertices[] = {
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+        -0.0f, 0.5f, 0.0f,
+    };
 
     uint32_t vao;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+
+    //uint32_t vbo;
+    //glGenBuffers(1, &vbo);
+    //glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(0);
+    SeePP::VertexBuffer vertex_buffer;
+    vertex_buffer.Bind();
+    vertex_buffer.BindData(vertices, SeePP::DrawMode::Static);
+    vertex_buffer.BindAttribute(0, 3, SeePP::AttributeType::F32, false, 3 * sizeof(float), (void*)0);
+    glUseProgram(shaderProgram);
 
     // main loop11
     while (!glfwWindowShouldClose(window))
@@ -103,8 +103,8 @@ int main(int argc, char *argv[])
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
         glBindVertexArray(vao);
+        glUseProgram(shaderProgram);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);

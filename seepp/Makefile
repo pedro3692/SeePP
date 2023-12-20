@@ -54,7 +54,7 @@ else ifeq ($(config),release)
 TARGETDIR = ../bin/Release
 TARGET = $(TARGETDIR)/SeePP
 OBJDIR = obj/Release
-DEFINES += -DRELEASE
+DEFINES += -DNDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++20
 LIBS += ../lib/Release/libGlad.a -lglfw -ldl

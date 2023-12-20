@@ -23,5 +23,5 @@ project "SeePP"
       symbols "On"
 
     filter "configurations:Release"
-      defines { "RELEASE" }
+      defines { "NDEBUG" }
       optimize "On"
