@@ -30,11 +30,12 @@ public:
   ~VertexBuffer();
 
   void Bind();
-  void BindData(float *vertices, DrawMode mode);
-  void BindAttribute(uint32_t index, int32_t size, AttributeType type, bool normalize, int32_t stride, const void* pointer);
+  void BindData(void *vertices, int64_t size, DrawMode mode);
+  void BindAttribute(uint32_t index, int32_t count, AttributeType type,
+                     bool normalize, int32_t stride, const void *pointer);
 
 private:
-  uint32_t m_id=0;
+  uint32_t m_id = 0;
 };
 
 } // namespace SeePP
