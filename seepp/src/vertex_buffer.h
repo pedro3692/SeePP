@@ -6,22 +6,11 @@
 
 namespace SeePP {
 
-enum class DrawMode {
+enum class BindType {
   None,
   Stream = GL_STREAM_DRAW,
   Static = GL_STATIC_DRAW,
   Dynamic = GL_DYNAMIC_DRAW,
-};
-
-enum class AttributeType {
-  None,
-  I8 = GL_BYTE,
-  U8 = GL_UNSIGNED_BYTE,
-  I16 = GL_SHORT,
-  U16 = GL_UNSIGNED_SHORT,
-  I32 = GL_INT,
-  U32 = GL_UNSIGNED_INT,
-  F32 = GL_FLOAT
 };
 
 class VertexBuffer {
@@ -30,9 +19,7 @@ public:
   ~VertexBuffer();
 
   void Bind() const;
-  void BindData(void *vertices, int64_t size, DrawMode mode) const;
-  void BindAttribute(uint32_t index, int32_t count, AttributeType type,
-                     bool normalize, int32_t stride, const void *pointer) const;
+  void BindData(void *vertices, int64_t size, BindType bind_type) const;
 
 private:
   uint32_t m_id = 0;

@@ -20,6 +20,8 @@ void APIENTRY glDebugOutput(GLenum source, GLenum type, unsigned int id,
                             GLenum severity, GLsizei length,
                             const char *message, const void *userParam);
 
+bool g_wireframe_mode = false;
+
 int main(int argc, char *argv[]) {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -56,30 +58,31 @@ int main(int argc, char *argv[]) {
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
   {
-    // TODO: load shaders source from file
-    const char *vertexShaderSource =
-        "#version 330 core\n"
-        "layout (location = 0) in vec3 aPos;\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-        "}\0";
-    Shader vertex_shader(ShaderType::Vertex, vertexShaderSource);
-
-    const char *fragmentShaderSource =
-        "#version 330 core\n"
-        "out vec4 FragColor;\n"
-        "void main()\n"
-        "{\n"
-        "   FragColor = vec4(1.0f, 0.0f, 0.0f, 0.1f);\n"
-        "}\0";
-    Shader fragment_shader(ShaderType::Fragment, fragmentShaderSource);
-
     ShaderProgram shader_program;
-    // shader program stuff here
-    shader_program.AttachShader(vertex_shader.id());
-    shader_program.AttachShader(fragment_shader.id());
-    shader_program.Link();
+    {
+      // TODO: load shaders source from file
+      const char *vertexShaderSource =
+          "#version 330 core\n"
+          "layout (location = 0) in vec3 aPos;\n"
+          "void main()\n"
+          "{\n"
+          "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+          "}\0";
+      Shader vertex_shader(ShaderType::Vertex, vertexShaderSource);
+
+      const char *fragmentShaderSource =
+          "#version 330 core\n"
+          "out vec4 FragColor;\n"
+          "void main()\n"
+          "{\n"
+          "   FragColor = vec4(1.0f, 0.0f, 0.0f, 0.1f);\n"
+          "}\0";
+      Shader fragment_shader(ShaderType::Fragment, fragmentShaderSource);
+
+      shader_program.AttachShader(vertex_shader.id());
+      shader_program.AttachShader(fragment_shader.id());
+      shader_program.Link();
+    }
 
     float vertices[] = {
         -0.5f, -0.5f, 0.0f, // v1
@@ -92,14 +95,19 @@ int main(int argc, char *argv[]) {
 
     VertexBuffer vertex_buffer;
     vertex_buffer.Bind();
-    vertex_buffer.BindData(vertices, sizeof(vertices), DrawMode::Static);
-    vertex_buffer.BindAttribute(0, 3, AttributeType::F32, false,
+    vertex_buffer.BindData(vertices, sizeof(vertices), BindType::Static);
+
+    vertex_array.BindAttributePointer(0, 3, DataType::F32, false,
                                 3 * sizeof(float), (void *)0);
 
+    uint32_t polyMode = GL_FILL;
     // main loop
     while (!glfwWindowShouldClose(window)) {
       handleInput(window);
 
+      polyMode = g_wireframe_mode ? GL_LINE : GL_FILL;
+
+      glPolygonMode(GL_FRONT_AND_BACK, polyMode);
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
 
@@ -119,6 +127,9 @@ int main(int argc, char *argv[]) {
 void handleInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
+  }
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+    g_wireframe_mode = !g_wireframe_mode;
   }
 }
 
