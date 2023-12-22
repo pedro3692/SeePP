@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "shader.h"
+#include "vertex_array.h"
 #include "vertex_buffer.h"
 
 #define WIDTH 800
@@ -95,9 +96,8 @@ int main(int argc, char *argv[]) {
         -0.0f, 0.5f,  0.0f, // v3
     };
 
-    uint32_t vao;
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    VertexArray vertex_array;
+    vertex_array.Bind();
 
     VertexBuffer vertex_buffer;
     vertex_buffer.Bind();
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
 
-      glBindVertexArray(vao);
+      vertex_array.Bind();
       glUseProgram(shaderProgram);
       glDrawArrays(GL_TRIANGLES, 0, 3);
 
