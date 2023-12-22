@@ -74,10 +74,12 @@ OBJECTS :=
 
 GENERATED += $(OBJDIR)/main.o
 GENERATED += $(OBJDIR)/shader.o
+GENERATED += $(OBJDIR)/shader_program.o
 GENERATED += $(OBJDIR)/vertex_array.o
 GENERATED += $(OBJDIR)/vertex_buffer.o
 OBJECTS += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/shader.o
+OBJECTS += $(OBJDIR)/shader_program.o
 OBJECTS += $(OBJDIR)/vertex_array.o
 OBJECTS += $(OBJDIR)/vertex_buffer.o
 
@@ -147,6 +149,9 @@ $(OBJDIR)/main.o: src/main.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/shader.o: src/shader.cpp
+	@echo "$(notdir $<)"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/shader_program.o: src/shader_program.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/vertex_array.o: src/vertex_array.cpp

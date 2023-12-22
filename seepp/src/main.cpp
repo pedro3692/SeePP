@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "shader.h"
+#include "shader_program.h"
 #include "vertex_array.h"
 #include "vertex_buffer.h"
 
@@ -54,7 +55,6 @@ int main(int argc, char *argv[]) {
   glViewport(0, 0, WIDTH, HEIGHT);
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
-  uint32_t shaderProgram = glCreateProgram();
   {
     // TODO: load shaders source from file
     const char *vertexShaderSource =
@@ -75,21 +75,12 @@ int main(int argc, char *argv[]) {
         "}\0";
     Shader fragment_shader(ShaderType::Fragment, fragmentShaderSource);
 
+    ShaderProgram shader_program;
     // shader program stuff here
-    glAttachShader(shaderProgram, vertex_shader.id());
-    glAttachShader(shaderProgram, fragment_shader.id());
-    glLinkProgram(shaderProgram);
+    shader_program.AttachShader(vertex_shader.id());
+    shader_program.AttachShader(fragment_shader.id());
+    shader_program.Link();
 
-    int success;
-    char infoLog[512];
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-      glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-      std::cout << std::format("ERROR::SHADER::PROGRAM::LINK_FAILED\n{}\n",
-                               infoLog);
-    }
-  }
-  {
     float vertices[] = {
         -0.5f, -0.5f, 0.0f, // v1
         0.5f,  -0.5f, 0.0f, // v2
@@ -104,7 +95,6 @@ int main(int argc, char *argv[]) {
     vertex_buffer.BindData(vertices, sizeof(vertices), DrawMode::Static);
     vertex_buffer.BindAttribute(0, 3, AttributeType::F32, false,
                                 3 * sizeof(float), (void *)0);
-    glUseProgram(shaderProgram);
 
     // main loop
     while (!glfwWindowShouldClose(window)) {
@@ -114,7 +104,7 @@ int main(int argc, char *argv[]) {
       glClear(GL_COLOR_BUFFER_BIT);
 
       vertex_array.Bind();
-      glUseProgram(shaderProgram);
+      shader_program.Use();
       glDrawArrays(GL_TRIANGLES, 0, 3);
 
       glfwSwapBuffers(window);
@@ -122,7 +112,6 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  glDeleteProgram(shaderProgram);
   glfwTerminate();
   return 0;
 }
