@@ -29,10 +29,10 @@ public:
   VertexBuffer();
   ~VertexBuffer();
 
-  void Bind();
-  void BindData(void *vertices, int64_t size, DrawMode mode);
+  void Bind() const;
+  void BindData(void *vertices, int64_t size, DrawMode mode) const;
   void BindAttribute(uint32_t index, int32_t count, AttributeType type,
-                     bool normalize, int32_t stride, const void *pointer);
+                     bool normalize, int32_t stride, const void *pointer) const;
 
 private:
   uint32_t m_id = 0;
