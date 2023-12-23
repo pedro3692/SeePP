@@ -44,20 +44,20 @@ ifeq ($(config),debug)
 TARGETDIR = ../bin/Debug
 TARGET = $(TARGETDIR)/SeePP
 OBJDIR = obj/Debug
-DEFINES += -DDEBUG
+DEFINES += -DDEBUG -DSPDLOG_FMT_EXTERNAL -DSPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -std=c++20
-LIBS += ../lib/Debug/libGlad.a -lglfw -ldl
+LIBS += ../lib/Debug/libGlad.a -lfmt -lspdlog -lglfw -ldl
 LDDEPS += ../lib/Debug/libGlad.a
 
 else ifeq ($(config),release)
 TARGETDIR = ../bin/Release
 TARGET = $(TARGETDIR)/SeePP
 OBJDIR = obj/Release
-DEFINES += -DNDEBUG
+DEFINES += -DNDEBUG -DSPDLOG_FMT_EXTERNAL -DSPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_INFO
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++20
-LIBS += ../lib/Release/libGlad.a -lglfw -ldl
+LIBS += ../lib/Release/libGlad.a -lfmt -lspdlog -lglfw -ldl
 LDDEPS += ../lib/Release/libGlad.a
 
 endif

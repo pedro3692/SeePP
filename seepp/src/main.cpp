@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <format>
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 #include "shader.h"
 #include "shader_program.h"
@@ -23,14 +24,15 @@ void APIENTRY glDebugOutput(GLenum source, GLenum type, unsigned int id,
 bool g_wireframe_mode = false;
 
 int main(int argc, char *argv[]) {
+spdlog::set_level(spdlog::level::debug); 
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   GLFWwindow *window =
-      glfwCreateWindow(WIDTH, HEIGHT, "[glad] GL with GLFW", NULL, NULL);
+      glfwCreateWindow(WIDTH, HEIGHT, "SeePP", NULL, NULL);
   if (window == nullptr) {
-    std::cout << "could not create window\n";
+    SPDLOG_CRITICAL("could not create window");
     return -1;
   }
 
@@ -38,11 +40,10 @@ int main(int argc, char *argv[]) {
 
   int version = gladLoadGL(glfwGetProcAddress);
   if (!version) {
-    std::cout << "could not init Glad" << std::endl;
+    SPDLOG_CRITICAL("could not init Glad\n");
     return -1;
   }
-  std::cout << std::format("GL v{}.{}\n", GLAD_VERSION_MAJOR(version),
-                           GLAD_VERSION_MINOR(version));
+  SPDLOG_DEBUG("GL v{}.{} initialized", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 
   glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
   int flags;
@@ -146,7 +147,6 @@ void APIENTRY glDebugOutput(GLenum source, GLenum type, unsigned int id,
 
   std::cout << "---------------" << std::endl;
   std::cout << "Debug message (" << id << "): " << message << std::endl;
-
   switch (source) {
   case GL_DEBUG_SOURCE_API:
     std::cout << "Source: API";
