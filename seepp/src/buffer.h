@@ -1,6 +1,4 @@
-#ifndef VERTEX_BUFFER_H_
-#define VERTEX_BUFFER_H_
-
+#pragma once
 #include <cstdint>
 #include <glad/gl.h>
 
@@ -11,6 +9,17 @@ enum class BufferType {
   Vertex = GL_VERTEX_ARRAY,
   Index = GL_ELEMENT_ARRAY_BUFFER,
 };
+
+constexpr const char *BufferTypeToString(BufferType type) {
+  switch (type) {
+  case BufferType::None:
+    return "none";
+  case BufferType::Vertex:
+    return "vertex";
+  case BufferType::Index:
+    return "index";
+  }
+}
 
 enum class BindType {
   None,
@@ -25,12 +34,11 @@ public:
   ~Buffer();
 
   void Bind() const;
-  void BindData(void *vertices, int64_t size, BindType bind_type) const;
+  void BindData(const void *vertices, int size, BindType bind_type) const;
 
 private:
-  BufferType m_type = 0;
+  BufferType m_type = BufferType::None;
   uint32_t m_id = 0;
 };
 
 } // namespace SeePP
-#endif // VERTEX_BUFFER_H_

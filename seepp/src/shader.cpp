@@ -22,19 +22,19 @@ Shader::Shader(ShaderType type, const char *code) : m_type(type) {
   glGetShaderiv(m_id, GL_COMPILE_STATUS, &success);
   if (!success) {
     glGetShaderInfoLog(m_id, 512, nullptr, infoLog);
-    SPDLOG_ERROR("[{}] shader [{}] compilation failed", ShaderTypeToString(m_type), infoLog);
+    SPDLOG_ERROR("{}_shader[{}] compilation failed", ShaderTypeToString(m_type), infoLog);
   }
-  SPDLOG_DEBUG("[{}] shader [{}] created", ShaderTypeToString(m_type), m_id);
+  SPDLOG_DEBUG("{}_shader[{}] created", ShaderTypeToString(m_type), m_id);
 }
 
 Shader::~Shader() {
   if (!m_id) {
-    SPDLOG_ERROR("[{}] shader not initialized, cannot be deleted", ShaderTypeToString(m_type));
+    SPDLOG_ERROR("uninitialized {}_shader cannot be deleted", ShaderTypeToString(m_type));
     return;
   }
 
   glDeleteShader(m_id);
-  SPDLOG_DEBUG("[{}] shader [{}] deleted", ShaderTypeToString(m_type), m_id);
+  SPDLOG_DEBUG("{}_shader[{}] deleted", ShaderTypeToString(m_type), m_id);
 }
 
 uint32_t Shader::id() const { return m_id; }

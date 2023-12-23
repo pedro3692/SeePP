@@ -6,20 +6,32 @@
 
 namespace SeePP {
 
-Buffer::Buffer() {
+Buffer::Buffer(BufferType type)
+  : m_type(type)
+{
+  if (m_type == BufferType::None) {
+    SPDLOG_ERROR("buffer cannot have None type");
+    return;
+  }
+
   glGenBuffers(1, &m_id);
-  SPDLOG_DEBUG("vbo [{}] created", m_id);
+  SPDLOG_DEBUG("{}_buffer[{}] created", BufferTypeToString(m_type), m_id);
 }
 
 Buffer::~Buffer() {
   glDeleteBuffers(1, &m_id);
-  SPDLOG_DEBUG("vbo [{}] deleted", m_id);
+  SPDLOG_DEBUG("{}_buffer[{}] deleted", BufferTypeToString(m_type), m_id);
 }
 
-void Buffer::Bind() const { glBindBuffer(GL_ARRAY_BUFFER, m_id); }
+void Buffer::Bind() const {
+  glBindBuffer((GLenum)m_type, m_id);
+  SPDLOG_DEBUG("{}_buffer[{}] bound", BufferTypeToString(m_type), m_id);
+}
 
-void Buffer::BindData(void *vertices, int64_t size, BindType mode) const {
-  glBufferData(GL_ARRAY_BUFFER, size, vertices, (GLenum)mode);
+void Buffer::BindData(const void *data, int size, BindType mode) const {
+  glBufferData((GLenum)m_type, size, data, (GLenum)mode);
+  SPDLOG_DEBUG("{} bytes of data bound to {}_buffer[{}]", size,
+               BufferTypeToString(m_type), m_id);
 }
 
 } // namespace SeePP

@@ -1,5 +1,4 @@
-#ifndef SHADER_PROGRAM_H_
-#define SHADER_PROGRAM_H_
+#pragma once
 
 #include <cstdint>
 
@@ -19,5 +18,3 @@ private:
 };
 
 } // namespace SeePP
-
-#endif // SHADER_PROGRAM_H_

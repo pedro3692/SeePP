@@ -1,14 +1,13 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <cstdint>
-#include <format>
 #include <iostream>
 #include <spdlog/spdlog.h>
 
 #include "shader.h"
+#include "buffer.h"
 #include "shader_program.h"
 #include "vertex_array.h"
-#include "vertex_buffer.h"
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -63,7 +62,7 @@ spdlog::set_level(spdlog::level::debug);
     {
       // TODO: load shaders source from file
       const char *vertexShaderSource =
-          "#version 330 core\n"
+          "#version 420 core\n"
           "layout (location = 0) in vec3 aPos;\n"
           "void main()\n"
           "{\n"
@@ -72,7 +71,7 @@ spdlog::set_level(spdlog::level::debug);
       Shader vertex_shader(ShaderType::Vertex, vertexShaderSource);
 
       const char *fragmentShaderSource =
-          "#version 330 core\n"
+          "#version 420 core\n"
           "out vec4 FragColor;\n"
           "void main()\n"
           "{\n"
@@ -86,35 +85,42 @@ spdlog::set_level(spdlog::level::debug);
     }
 
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f, // v1
-        0.5f,  -0.5f, 0.0f, // v2
-        -0.0f, 0.5f,  0.0f, // v3
+        -0.5f,  0.5f, 0.0f,  // v1
+         0.5f, -0.5f, 0.0f,  // v2
+        -0.5f, -0.5f, 0.0f,  // v3
+         0.5f,  0.5f, 0.0f   // v4
+    };
+
+    uint8_t indices[] = {
+        0, 1, 2, // trig1
+        0, 1, 3  // trig2
     };
 
     VertexArray vertex_array;
     vertex_array.Bind();
 
-    VertexBuffer vertex_buffer;
+    Buffer vertex_buffer(BufferType::Vertex);
     vertex_buffer.Bind();
     vertex_buffer.BindData(vertices, sizeof(vertices), BindType::Static);
 
     vertex_array.BindAttributePointer(0, 3, DataType::F32, false,
                                 3 * sizeof(float), (void *)0);
 
-    uint32_t polyMode = GL_FILL;
+    Buffer index_buffer(BufferType::Index);
+    index_buffer.Bind();
+    index_buffer.BindData(indices, sizeof(indices), BindType::Static);
+
     // main loop
     while (!glfwWindowShouldClose(window)) {
       handleInput(window);
 
-      polyMode = g_wireframe_mode ? GL_LINE : GL_FILL;
-
-      glPolygonMode(GL_FRONT_AND_BACK, polyMode);
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
 
       vertex_array.Bind();
+
       shader_program.Use();
-      glDrawArrays(GL_TRIANGLES, 0, 3);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, 0);
 
       glfwSwapBuffers(window);
       glfwPollEvents();
@@ -128,9 +134,6 @@ spdlog::set_level(spdlog::level::debug);
 void handleInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
-  }
-  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-    g_wireframe_mode = !g_wireframe_mode;
   }
 }
 

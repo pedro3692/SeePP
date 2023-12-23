@@ -1,5 +1,4 @@
-#ifndef VERTEX_ARRAY_H_
-#define VERTEX_ARRAY_H_
+#pragma once
 
 #include <cstdint>
 #include <glad/gl.h>
@@ -32,5 +31,3 @@ private:
 };
 
 } // namespace SeePP
-
-#endif // VERTEX_ARRAY_H_

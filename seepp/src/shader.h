@@ -1,5 +1,4 @@
-#ifndef SHADER_H_
-#define SHADER_H_
+#pragma once
 
 #include <cstdint>
 #include <glad/gl.h>
@@ -15,11 +14,11 @@ enum class ShaderType {
 constexpr const char *ShaderTypeToString(ShaderType st) {
   switch (st) {
   case ShaderType::None:
-    return "None";
+    return "none";
   case ShaderType::Fragment:
-    return "Fragment";
+    return "fragment";
   case ShaderType::Vertex:
-    return "Vertex";
+    return "vertex";
   }
 }
 
@@ -36,4 +35,3 @@ private:
 };
 
 } // namespace SeePP
-#endif // SHADER_H_
