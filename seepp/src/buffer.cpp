@@ -2,23 +2,23 @@
 #include <glad/gl.h>
 #include <spdlog/spdlog.h>
 
-#include "vertex_buffer.h"
+#include "buffer.h"
 
 namespace SeePP {
 
-VertexBuffer::VertexBuffer() {
+Buffer::Buffer() {
   glGenBuffers(1, &m_id);
   SPDLOG_DEBUG("vbo [{}] created", m_id);
 }
 
-VertexBuffer::~VertexBuffer() {
+Buffer::~Buffer() {
   glDeleteBuffers(1, &m_id);
   SPDLOG_DEBUG("vbo [{}] deleted", m_id);
 }
 
-void VertexBuffer::Bind() const { glBindBuffer(GL_ARRAY_BUFFER, m_id); }
+void Buffer::Bind() const { glBindBuffer(GL_ARRAY_BUFFER, m_id); }
 
-void VertexBuffer::BindData(void *vertices, int64_t size, BindType mode) const {
+void Buffer::BindData(void *vertices, int64_t size, BindType mode) const {
   glBufferData(GL_ARRAY_BUFFER, size, vertices, (GLenum)mode);
 }
 

@@ -6,6 +6,12 @@
 
 namespace SeePP {
 
+enum class BufferType {
+  None,
+  Vertex = GL_VERTEX_ARRAY,
+  Index = GL_ELEMENT_ARRAY_BUFFER,
+};
+
 enum class BindType {
   None,
   Stream = GL_STREAM_DRAW,
@@ -13,15 +19,16 @@ enum class BindType {
   Dynamic = GL_DYNAMIC_DRAW,
 };
 
-class VertexBuffer {
+class Buffer {
 public:
-  VertexBuffer();
-  ~VertexBuffer();
+  Buffer(BufferType type);
+  ~Buffer();
 
   void Bind() const;
   void BindData(void *vertices, int64_t size, BindType bind_type) const;
 
 private:
+  BufferType m_type = 0;
   uint32_t m_id = 0;
 };
 
