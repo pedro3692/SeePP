@@ -6,7 +6,7 @@ namespace SeePP {
 
 enum class BufferType {
   None,
-  Vertex = GL_VERTEX_ARRAY,
+  Vertex = GL_ARRAY_BUFFER,
   Index = GL_ELEMENT_ARRAY_BUFFER,
 };
 

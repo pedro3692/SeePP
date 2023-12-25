@@ -49,12 +49,12 @@ spdlog::set_level(spdlog::level::debug);
   glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
   if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
     glEnable(GL_DEBUG_OUTPUT);
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback(glDebugOutput, nullptr);
-    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr,
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
+    glDebugMessageCallbackARB(glDebugOutput, nullptr);
+    glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr,
                           GL_TRUE);
   }
-  glViewport(0, 0, WIDTH, HEIGHT);
+  //glViewport(0, 0, WIDTH, HEIGHT);
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
   {
@@ -85,15 +85,15 @@ spdlog::set_level(spdlog::level::debug);
     }
 
     float vertices[] = {
-        -0.5f,  0.5f, 0.0f,  // v1
-         0.5f, -0.5f, 0.0f,  // v2
-        -0.5f, -0.5f, 0.0f,  // v3
-         0.5f,  0.5f, 0.0f   // v4
+        0.5f,  0.5f, 0.0f,  // top right
+        0.5f, -0.5f, 0.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f,  // bottom left
+        -0.5f,  0.5f, 0.0f   // top left
     };
 
     uint8_t indices[] = {
-        0, 1, 2, // trig1
-        0, 1, 3  // trig2
+        0, 1, 3, // trig1
+        1, 2, 3  // trig2
     };
 
     VertexArray vertex_array;
@@ -103,13 +103,12 @@ spdlog::set_level(spdlog::level::debug);
     vertex_buffer.Bind();
     vertex_buffer.BindData(vertices, sizeof(vertices), BindType::Static);
 
-    vertex_array.BindAttributePointer(0, 3, DataType::F32, false,
-                                3 * sizeof(float), (void *)0);
-
     Buffer index_buffer(BufferType::Index);
     index_buffer.Bind();
     index_buffer.BindData(indices, sizeof(indices), BindType::Static);
 
+    vertex_array.BindAttributePointer(0, 3, DataType::F32, false,
+                                3 * sizeof(float), (void *)0);
     // main loop
     while (!glfwWindowShouldClose(window)) {
       handleInput(window);
@@ -117,10 +116,9 @@ spdlog::set_level(spdlog::level::debug);
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
 
-      vertex_array.Bind();
-
       shader_program.Use();
-      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, 0);
+      vertex_array.Bind();
+      glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(indices[0]), GL_UNSIGNED_BYTE, 0);
 
       glfwSwapBuffers(window);
       glfwPollEvents();
