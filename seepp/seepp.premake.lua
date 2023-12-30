@@ -7,7 +7,8 @@ project "SeePP"
 
     includedirs {
         "../glad/include",
-        "src"
+        "src",
+        "vendor"
     }
 
     files { "src/*.h", "src/*.cpp" }

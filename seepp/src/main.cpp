@@ -1,13 +1,18 @@
+#include <cstddef>
+#include <cstring>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <cstdint>
 #include <iostream>
 #include <spdlog/spdlog.h>
+#include <type_traits>
 
+#include "glm/ext/vector_bool3.hpp"
 #include "shader.h"
 #include "buffer.h"
 #include "shader_program.h"
 #include "vertex_array.h"
+#include "vertex.h"
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -84,11 +89,11 @@ spdlog::set_level(spdlog::level::debug);
       shader_program.Link();
     }
 
-    float vertices[] = {
-        0.5f,  0.5f, 0.0f,  // top right
-        0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left
+    Vertex vertices[] = {
+      Vertex({0.5f,  0.5f, 0.0f}),  // top right
+      Vertex({0.5f, -0.5f, 0.0f}),  // bottom right
+      Vertex({-0.5f, -0.5f, 0.0f}),  // bottom left
+      Vertex({-0.5f,  0.5f, 0.0f})   // top left
     };
 
     uint8_t indices[] = {
@@ -108,7 +113,11 @@ spdlog::set_level(spdlog::level::debug);
     index_buffer.BindData(indices, sizeof(indices), BindType::Static);
 
     vertex_array.BindAttributePointer(0, 3, DataType::F32, false,
-                                3 * sizeof(float), (void *)0);
+                                9 * sizeof(float), (void *)0);
+    vertex_array.BindAttributePointer(1, 4, DataType::F32, false,
+                                9 * sizeof(float), (void *)3);
+    vertex_array.BindAttributePointer(2, 2, DataType::F32, false,
+                                9 * sizeof(float), (void *)7);
     // main loop
     while (!glfwWindowShouldClose(window)) {
       handleInput(window);

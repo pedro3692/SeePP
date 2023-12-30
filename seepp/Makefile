@@ -27,7 +27,7 @@ endif
 ifeq ($(origin AR), default)
   AR = ar
 endif
-INCLUDES += -I../glad/include -Isrc
+INCLUDES += -I../glad/include -Isrc -Ivendor
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -76,11 +76,13 @@ GENERATED += $(OBJDIR)/buffer.o
 GENERATED += $(OBJDIR)/main.o
 GENERATED += $(OBJDIR)/shader.o
 GENERATED += $(OBJDIR)/shader_program.o
+GENERATED += $(OBJDIR)/vertex.o
 GENERATED += $(OBJDIR)/vertex_array.o
 OBJECTS += $(OBJDIR)/buffer.o
 OBJECTS += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/shader.o
 OBJECTS += $(OBJDIR)/shader_program.o
+OBJECTS += $(OBJDIR)/vertex.o
 OBJECTS += $(OBJDIR)/vertex_array.o
 
 # Rules
@@ -155,6 +157,9 @@ $(OBJDIR)/shader.o: src/shader.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/shader_program.o: src/shader_program.cpp
+	@echo "$(notdir $<)"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/vertex.o: src/vertex.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/vertex_array.o: src/vertex_array.cpp
